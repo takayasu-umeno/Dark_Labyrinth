@@ -114,6 +114,12 @@ void map_finalize(){
 
 }
 
+//マップの値を返す
+int map_value(int x, int y){
+
+	return main_map[x][y];
+}
+
 //マップの生成
 void map_create(){
 

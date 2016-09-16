@@ -106,6 +106,7 @@ void map_draw();//描画
 void map_wii();//リモコン操作
 void map_finalize();//終了処理（あれば）
 void map_create();//マップの生成
+int map_value(int x, int y);//マップの値を返す
 
 //enemy_
 void enemy_initialize();//初期化
