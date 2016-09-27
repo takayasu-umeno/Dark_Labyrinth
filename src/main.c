@@ -26,13 +26,17 @@ struct FPS {
 struct FPS UpdateFPS;
 
 /****グローバル変数*************************************************************************************************************************/
-int layer = play; //レイヤー
-SDL_Surface *window; // ウィンドウ（画像）データへのポインタ
+int layer = play;		//レイヤー
+SDL_Surface *window; 	// ウィンドウ（画像）データへのポインタ
+wiimote_t wiimote; 		//Wiiリモコン変数
 /*****************************************************************************************************************************/
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[])
+{
+
 
 	initialize(); //初期化
+	wii_initialize(&wiimote,argc,argv);
 
 	wii_thr = SDL_CreateThread(wii_thread, NULL); //マルチスレッド生成（描画以外の処理）
 	update_thr = SDL_CreateThread(update_thread, NULL); //マルチスレッド生成（描画以外の処理）

@@ -8,9 +8,14 @@
 
 #include "header.h"
 
-//初期化
-void player_initialize(){
 
+struct player_info player;
+SDL_Surface *CharaChips;
+SDL_Surface *win_baf;
+//初期化
+void player_initialize()
+{
+	CharaChips = IMG_Load("pictures/char_m01.png");
 
 }
 
@@ -27,7 +32,9 @@ void player_update(){
 }
 
 //描画
-void player_draw(){
+void player_draw()
+{
+
 
 }
 

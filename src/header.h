@@ -15,8 +15,8 @@
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL_mixer.h> // SDLでサウンドを用いるために必要なヘッダファ
-//#include <libcwiimote/wiimote.h>	// Wiiリモコンを用いるために必要なヘッダファイル
-//#include <libcwiimote/wiimote_api.h>	// Wiiリモコンを用いるために必要なヘッダファイル
+#include <libcwiimote/wiimote.h>	// Wiiリモコンを用いるために必要なヘッダファイル
+#include <libcwiimote/wiimote_api.h>	// Wiiリモコンを用いるために必要なヘッダファイル
 
 //-lcwiimote
 
@@ -57,6 +57,9 @@ enum { //レイヤー
 
 /* プロトタイプ宣言 ******************************************************************************************************************************/
 
+//Keywii.c
+void wii_initialize(wiimote_t *wii,int argc, char* argv[]);
+int gpUpdateKey(wiimote_t wiimote);
 
 //playgamen
 void playgamen_initialize();//初期化
