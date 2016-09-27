@@ -9,9 +9,11 @@
 #include "header.h"
 
 
-struct player_info player;
-SDL_Surface *CharaChips;
-SDL_Surface *win_baf;
+struct player_info player;	//プレイヤー構造体
+SDL_Surface *win_baf;		//プレイヤー描画のバッファー
+
+SDL_Surface *CharaChips;	//キャラ画像のロード
+
 //初期化
 void player_initialize()
 {
