@@ -13,41 +13,52 @@
 		flag = 2;	
 	}
 */
-
+wiimote_t wiimote = WIIMOTE_INIT; 		//Wiiリモコン変数
 int key[11];
 
 
 
 /*
  * Wiiリモコンの初期化を行う
- * 引数：wiiリモコンの変数へのアドレス、
- *
- *
- *
+ * 引数：wiiリモコンの変数へのアドレス、main関数の引数に渡されている値
  */
-void wii_initialize(wiimote_t *wii,int argc, char* argv[])
+int  wii_initialize(int argc, char* argv[])
 {
+
+
 	if (argc < 2)
 	{	// Wiiリモコン識別情報がコマンド引数で与えられなければ
 		printf("WiiリモコンのIDを実行時に与えてください\n");
-		exit(1);
+		return 0;
 	}
 
 	// Wiiリモコンの接続（１つのみ）
-	if (wiimote_connect(wii, argv[1]) < 0)
+	if (wiimote_connect(&wiimote, argv[1]) < 0)
 	{	// コマンド引数に指定したWiiリモコン識別情報を渡して接続
 		printf("指定されたwiiリモコンに接続できませんでした: %s\n", wiimote_get_error());
-		exit(1);
+		return 0;
 	}
 
-	wii->led.one  = 1;	// WiiリモコンのLEDの一番左を点灯させる（接続を知らせるために）
+	wiimote.led.one  = 1;	// WiiリモコンのLEDの一番左を点灯させる（接続を知らせるために）
 
 	// センサからのデータを受け付けるモードに変更
-	wii->mode.acc = 1;
+	wiimote.mode.acc = 1;
+
+
+	return wiimote_is_open(&wiimote);
 
 }
 
-int gpUpdateKey(wiimote_t wiimote){//key判定のため
+int gpUpdateKey(wiimote_t wii)
+{//key判定のため
+
+	//Wiiリモコンの状態を更新
+	if ( wiimote_update(&wiimote) < 0 )
+		{
+			wiimote_disconnect(&wiimote);
+			printf("wiiリモコンの接続が切れました\n");
+			return 0;
+		}
 
 	char wiikey[] = {
 	wiimote.keys.bits, //0
@@ -73,5 +84,12 @@ int gpUpdateKey(wiimote_t wiimote){//key判定のため
 			key[i] = 0;
 		}
 	}
-	return 0;
+	return 1;
+}
+
+void Wii_finalize()
+{
+	wiimote_disconnect(&wiimote);		// Wiiリモコンとの接続を解除
+
+
 }

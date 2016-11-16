@@ -6,6 +6,12 @@
  */
 
 
+/*
+ * プレイヤーの構造体に番号または名前
+ *
+ *マップ生成のプロトタイプ宣言はマップでいいかなー
+ */
+
 /* include ******************************************************************************************************************************/
 #include <stdio.h>
 #include <math.h>
@@ -22,19 +28,23 @@
 
 /* 定義 ******************************************************************************************************************************/
 
-#define WINDOW_WIDTH 800//480//ウインドウの横幅
-#define WINDOW_HEIGHT 800//640//ウインドウの高さ
+#define WINDOW_WIDTH 800		//ウインドウの横幅
+#define WINDOW_HEIGHT 640		//ウインドウの高さ
 
 /* 構造体 ******************************************************************************************************************************/
 
 struct player_info{//プレイヤーについての情報
     int x;
     int y;
-    int hp;
-    int stamina;//スタミナ
-    int key;//キーアイテムを所持しているかのフラグ　０：未所持　１：所持
-    int stock;//ストックアイテムの識別番号（所持していない場合：ー１）
-    int item;//発動しているアイテムの効果（ない場合：ー１）
+
+    int HP;
+    int MaxHP;
+    int SP;//スタミナ
+    int MaxSP;
+
+    int key;	//キーアイテムを所持しているかのフラグ　０：未所持　１：所持
+    int stock;	//ストックアイテムの識別番号（所持していない場合：ー１）
+    int item;	//発動しているアイテムの効果（ない場合：ー１）
     int map_score;//このマップでの獲得ポイント
     int sum_score;//総獲得ポイント
 };
@@ -47,18 +57,25 @@ struct enemy_info{//敵についての情報
 /* グローバル変数 ***************************************************************************************************************************/
 
 
-extern int layer;
-extern SDL_Surface *window; // ウィンドウ（画像）データへのポインタ
+extern int layer;				//レイヤー
+extern int loop_flag;			//ゲームループを制御する変数
+extern SDL_Surface *window; 	// ウィンドウ（画像）データへのポインタ
+
+extern wiimote_t wiimote; 		//Wiiリモコンの変数
+extern int key[11];			//wiiリモコンの変数
+
+extern struct player_info player;	//プレイヤー構造体
+
 /* 列挙体 ******************************************************************************************************************************/
 
 enum { //レイヤー
-	tytle, loading, play, result, final_result
+	title, loading, play, result, final_result
 };
 
 /* プロトタイプ宣言 ******************************************************************************************************************************/
 
 //Keywii.c
-void wii_initialize(wiimote_t *wii,int argc, char* argv[]);
+int wii_initialize(int argc, char* argv[]);
 int gpUpdateKey(wiimote_t wiimote);
 
 //playgamen
@@ -127,10 +144,10 @@ void player_draw();//描画
 void player_wii();//リモコン操作
 void player_finalize();//終了処理（あれば）
 
-//tytle_
-void tytle_initialize();//初期化
-void tytle_reinitialize();//再初期化
-void tytle_update();//計算等
-void tytle_draw();//描画
-void tytle_wii();//リモコン操作
-void tytle_finalize();//終了処理（あれば）
+//title_
+void title_initialize();//初期化
+void title_reinitialize();//再初期化
+void title_update();//計算等
+void title_draw();//描画
+void title_wii();//リモコン操作
+void title_finalize();//終了処理（あれば）

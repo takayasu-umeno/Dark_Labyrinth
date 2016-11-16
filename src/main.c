@@ -1,5 +1,6 @@
 #include"header.h"
 
+
 /*****************************************************************************************************************************/
 SDL_Thread *wii_thr, *update_thr;
 
@@ -25,22 +26,24 @@ struct FPS {
 
 struct FPS UpdateFPS;
 
-/****グローバル変数*************************************************************************************************************************/
-int layer = play;		//レイヤー
+/****グローバル変数************************************************************************************************************/
+
+int layer = title;		//レイヤー
+int loop_flag = 0;		//ゲームループを制御する変数
 SDL_Surface *window; 	// ウィンドウ（画像）データへのポインタ
-wiimote_t wiimote; 		//Wiiリモコン変数
+
 /*****************************************************************************************************************************/
 
 int main(int argc, char* argv[])
 {
 
-
+	loop_flag = wii_initialize(argc,argv);
 	initialize(); //初期化
-	wii_initialize(&wiimote,argc,argv);
+
 
 	wii_thr = SDL_CreateThread(wii_thread, NULL); //マルチスレッド生成（描画以外の処理）
 	update_thr = SDL_CreateThread(update_thread, NULL); //マルチスレッド生成（描画以外の処理）
-	while (1) {
+	while (loop_flag) {
 		draw();
 	}
 
@@ -51,12 +54,16 @@ int main(int argc, char* argv[])
 
 
 //マルチスレッド
-int wii_thread() {
+int wii_thread()
+{
 
-	while (1) {
+	while (loop_flag)
+	{
+		loop_flag = gpUpdateKey(wiimote);
+
 		switch (layer) {
-		case tytle:
-			tytle_wii();
+		case title:
+			title_wii();
 			break;
 		case loading:
 			loading_wii();
@@ -79,13 +86,15 @@ int wii_thread() {
 //マルチスレッド
 int update_thread() {
 
-	while (1) {
+	while (loop_flag)
+	{
 		UpdateFPS.FrameCount++;
 		Update_UpDate_FPS();
 		Wait_Update_FPS();
+
 		switch (layer) {
-		case tytle:
-			tytle_update();
+		case title:
+			title_update();
 			break;
 		case loading:
 			loading_update();
@@ -109,15 +118,21 @@ int update_thread() {
 
 //
 void draw(){
+
+	//windowサーフェスのリセット
+	SDL_FillRect(window, NULL,SDL_MapRGB(window->format, 0, 0, 0));
+
 	switch (layer) {
-	case tytle:
-		tytle_draw();
+	case title:
+		title_draw();
 		break;
 	case loading:
 		loading_draw();
 		break;
 	case play:
+
 		map_draw();
+		item_draw();
 		enemy_draw();
 		playgamen_draw();
 		player_draw();
@@ -166,7 +181,7 @@ void initialize() {
 	map_initialize();
 	enemy_initialize();
 	player_initialize();
-	tytle_initialize();
+	title_initialize();
 
 	reinitialize();//再初期化
 }
@@ -180,7 +195,7 @@ void reinitialize() {
 	map_reinitialize();
 	enemy_reinitialize();
 	player_reinitialize();
-	tytle_reinitialize();
+	title_reinitialize();
 }
 
 
@@ -227,5 +242,5 @@ void finalize(){
 	map_finalize();
 	enemy_finalize();
 	player_finalize();
-	tytle_finalize();
+	title_finalize();
 }
