@@ -6,6 +6,10 @@
  */
 
 
+
+//当たり判定なし
+
+
 #include "header.h"
 #include "player_header.h"
 
